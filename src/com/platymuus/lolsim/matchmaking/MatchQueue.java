@@ -1,11 +1,10 @@
 package com.platymuus.lolsim.matchmaking;
 
 import com.platymuus.lolsim.players.Summoner;
-import com.sun.jmx.remote.internal.ArrayQueue;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
-import java.util.Queue;
 
 /**
  * Represents a queue in which players can enter to be matched with others.
@@ -13,20 +12,51 @@ import java.util.Queue;
 public class MatchQueue {
 
     /**
-     *
+     * The deque of completed matches.
      */
-    private ArrayDeque<Match> completedMatches;
-    
-    public MatchQueue(int teamSize, int popularity) {
-        
+    private final ArrayDeque<Match> completedMatches = new ArrayDeque<Match>();
+
+    /**
+     * Matches that have not been completed.
+     */
+    private final ArrayList<Match> matches = new ArrayList<Match>();
+
+    /**
+     * The name thing.
+     */
+    private final String name;
+
+    public MatchQueue(String name, int teamSize, int popularity) {
+        this.name = name;
     }
 
     /**
-     * Enter a summoner into the matchmaking queue.
-     * @param summoner The Summoner to enter.
+     * Enter a summoner or summoners into the matchmaking queue together.
+     * @param summoners The Summoners to enter.
      */
-    public void addPlayer(Summoner summoner) {
-        
+    public void addPlayers(Summoner... summoners) {
+        int elo = 0;
+        for (Summoner guy : summoners) {
+            elo += guy.getElo(name);
+        }
+        for (Match match : new ArrayList<Match>(matches)) {
+            if (match.canAdd(summoners.length, elo / summoners.length)) {
+                match.add(summoners);
+                if (match.isComplete()) {
+                    matches.remove(match);
+                    completedMatches.add(match);
+                }
+                return;
+            }
+        }
+        Match match = new Match(5);
+        match.add(summoners);
+    }
+
+    public void tick() {
+        for (Match match : matches) {
+            match.tick();
+        }
     }
 
     /**
