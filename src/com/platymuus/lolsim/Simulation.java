@@ -60,7 +60,7 @@ public class Simulation {
      */
     public void defaultPopulate() {
         addQueue(new MatchQueue("normal5", 5, 100));
-        for (int i = 0; i < 50; ++i) {
+        for (int i = 0; i < 1000; ++i) {
             Summoner guy = new Summoner();
             guy.setElo("normal5", 1200);
             summoners.add(guy);
@@ -129,7 +129,13 @@ public class Simulation {
     }
 
     private double tickChanceByTime(double mean) {
-        return 0.2; // this is wrong
+        // k = 0.5 = % chance that event will have occurred by the mean
+        // k = 1 - (1 - p)^n
+        // 1 - k = (1 - p)^n
+        // n\(1-k) = 1 - p
+        // n\(1-k) - 1 = -p
+        // p = 1 - n root (1-k)
+        return 1 - Math.pow(1 - 0.5, 1 / mean);
     }
     
     private void log(String text) {
