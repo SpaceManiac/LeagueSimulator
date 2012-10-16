@@ -9,22 +9,22 @@ import java.util.HashMap;
 public class Summoner {
 
     /**
-     * The summoner's name
+     * The summoner's name.
      */
     private String name;
 
     /**
-     * The players prefered class, ex. Tank, Passive Suport, Jungle ect.
+     * The players preffered class, ex. Tank, Passive Support, Jungle ect.
      */
     private String affinity;
 
     /**
-     * Summoner Level
+     * Summoner Level.
      */
     private int level;
 
     /**
-     * The player's general skill at video games
+     * The player's general skill at video games.
      */
     private int skill;
 
@@ -39,7 +39,7 @@ public class Summoner {
     private HashMap<String, Integer> champs;
 
     /**
-     * The amount a play is online between never(0) and 24/7(1)
+     * The amount a play is online between never(0) and 24/7(1).
      */
     private double activity = 0.2;
 
@@ -49,17 +49,16 @@ public class Summoner {
     private final HashMap<String, QueueInfo> queueInfo = new HashMap<String, QueueInfo>();
 
     /**
-     * Will calculate the individual players score
-     *
-     * @return players score
+     * Calculate the total individual skill score of this summoner.
+     * @return The score.
      */
     public int score() {
+        // TODO
         return 5;
     }
 
     /**
      * Get the Elo rating for this summoner in a given queue.
-     *
      * @param queue The queue id.
      * @return The Elo rating.
      */
@@ -67,14 +66,28 @@ public class Summoner {
         return queueInfo(queue).elo;
     }
 
+    /**
+     * Set the Elo rating for this summoner in a given queue.
+     * @param queue The queue id.
+     * @param elo The Elo rating.
+     */
     public void setElo(String queue, int elo) {
         queueInfo(queue).elo = elo;
     }
 
+    /**
+     * Return often this summoner is online.
+     * @return A value from 0.0 to 1.0 indicating how much of the time the summoner is online.
+     */
     public double getActivity() {
         return activity;
     }
 
+    /**
+     * Create or get a QueueInfo structure for a queue.
+     * @param queue The queue id.
+     * @return The existing or created QueueInfo.
+     */
     private QueueInfo queueInfo(String queue) {
         if (!queueInfo.containsKey(queue)) {
             queueInfo.put(queue, new QueueInfo());
@@ -82,6 +95,9 @@ public class Summoner {
         return queueInfo.get(queue);
     }
 
+    /**
+     * A storage structure for per-queue data.
+     */
     private class QueueInfo {
         public int elo = 1200;
         public int won = 0;

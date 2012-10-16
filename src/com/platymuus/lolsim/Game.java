@@ -12,14 +12,30 @@ import java.util.HashMap;
  */
 public class Game {
 
+    /**
+     * The Match that generated this game's players.
+     */
     private final Match match;
 
+    /**
+     * A semi-unique identifier for this game.
+     */
     private final String id;
-    
+
+    /**
+     * The amount of time this game is set to last.
+     */
     private int totalTime;
-    
+
+    /**
+     * The amount of time in seconds this game has lasted.
+     */
     private int timeElapsed;
 
+    /**
+     * Construct a new game.
+     * @param match The Match that generated this game's players.
+     */
     public Game(Match match) {
         this.match = match;
         
@@ -29,14 +45,25 @@ public class Game {
         timeElapsed = 0;
     }
 
+    /**
+     * Tick this game for one second.
+     */
     public void tick() {
         timeElapsed += 1;
     }
 
+    /**
+     * Determine of the game has ended by now.
+     * @return Whether the game has ended.
+     */
     public boolean hasEnded() {
         return timeElapsed > totalTime;
     }
 
+    /**
+     * Calculate the winning team of this game.
+     * @return The winning Team. Not guaranteed to be the same between calls.
+     */
     public Team getWinner() {
         int totalScore = 0;
         HashMap<Team, Integer> scores = new HashMap<Team, Integer>();

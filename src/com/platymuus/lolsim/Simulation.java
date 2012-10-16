@@ -50,7 +50,11 @@ public class Simulation {
     public Simulation() {
 
     }
-    
+
+    /**
+     * Register a match queue with the simulation.
+     * @param queue The MatchQueue to register.
+     */
     public void addQueue(MatchQueue queue) {
         queues.put(queue.getName(), queue);
     }
@@ -80,6 +84,9 @@ public class Simulation {
         }
     }
 
+    /**
+     * Tick the simulation for one second. Should not be called directly.
+     */
     private void tick() {
         // Put players online or offline as needed
         HashSet<Summoner> remove = new HashSet<Summoner>();
@@ -128,6 +135,11 @@ public class Simulation {
         }
     }
 
+    /**
+     * Calculate the per-tick chance of an event based on the mean number of ticks until that event.
+     * @param mean The mean time it should take for an event to occur, in seconds.
+     * @return The random chance that the event should occur each tick.
+     */
     private double tickChanceByTime(double mean) {
         // k = 0.5 = % chance that event will have occurred by the mean
         // k = 1 - (1 - p)^n
@@ -137,7 +149,11 @@ public class Simulation {
         // p = 1 - n root (1-k)
         return 1 - Math.pow(1 - 0.5, 1 / mean);
     }
-    
+
+    /**
+     * Log a message along with a simulation timestamp.
+     * @param text The message to log.
+     */
     private void log(String text) {
         System.out.println("[" + timeElapsed + "] " + text);
     }
