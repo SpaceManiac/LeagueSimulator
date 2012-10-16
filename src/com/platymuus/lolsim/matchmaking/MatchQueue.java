@@ -22,12 +22,32 @@ public class MatchQueue {
     private final ArrayList<Match> matches = new ArrayList<Match>();
 
     /**
-     * The name thing.
+     * The identifier (e.g. "normal5") for this queue.
      */
     private final String name;
 
+    /**
+     * The team size this queue uses.
+     */
+    private final int teamSize;
+
+    /**
+     * Initialize a new match queue.
+     * @param name The short name of this queue, e.g. "normal5".
+     * @param teamSize The size of teams in this queue (usually 3 or 5).
+     * @param popularity How popular in general this queue is.
+     */
     public MatchQueue(String name, int teamSize, int popularity) {
         this.name = name;
+        this.teamSize = teamSize;
+    }
+
+    /**
+     * Get the name of this queue.
+     * @return The queue's short id.
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -49,10 +69,14 @@ public class MatchQueue {
                 return;
             }
         }
-        Match match = new Match(5);
+        Match match = new Match(name, teamSize);
         match.add(summoners);
+        matches.add(match);
     }
 
+    /**
+     * Tick each match in the queue.
+     */
     public void tick() {
         for (Match match : matches) {
             match.tick();
@@ -81,5 +105,14 @@ public class MatchQueue {
             return null;
         }
     }
-    
+
+    @Override
+    public String toString() {
+        return "MatchQueue{" +
+                "name='" + name + '\'' +
+                ", teamSize=" + teamSize +
+                ", matches=" + matches.size() +
+                ", completedMatches=" + completedMatches.size() +
+                '}';
+    }
 }
