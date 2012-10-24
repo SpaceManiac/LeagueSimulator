@@ -1,5 +1,6 @@
 package com.platymuus.lolsim.matchmaking;
 
+import com.platymuus.lolsim.Simulation;
 import com.platymuus.lolsim.players.Summoner;
 
 import java.util.ArrayDeque;
@@ -22,6 +23,11 @@ public class MatchQueue {
     private final ArrayList<Match> matches = new ArrayList<Match>();
 
     /**
+     * The simulation this MatchQueue is a part of.
+     */
+    private final Simulation sim;
+
+    /**
      * The identifier (e.g. "normal5") for this queue.
      */
     private final String name;
@@ -37,7 +43,8 @@ public class MatchQueue {
      * @param teamSize The size of teams in this queue (usually 3 or 5).
      * @param popularity How popular in general this queue is.
      */
-    public MatchQueue(String name, int teamSize, int popularity) {
+    public MatchQueue(Simulation sim, String name, int teamSize, int popularity) {
+        this.sim = sim;
         this.name = name;
         this.teamSize = teamSize;
     }
@@ -48,6 +55,14 @@ public class MatchQueue {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Get the simulation this queue belongs to.
+     * @return The Simulation.
+     */
+    public Simulation getSimulation() {
+        return sim;
     }
 
     /**
@@ -69,7 +84,7 @@ public class MatchQueue {
                 return;
             }
         }
-        Match match = new Match(name, teamSize);
+        Match match = new Match(this, teamSize);
         match.add(summoners);
         matches.add(match);
     }

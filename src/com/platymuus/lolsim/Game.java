@@ -13,6 +13,11 @@ import java.util.HashMap;
 public class Game {
 
     /**
+     * The Simulation the game is a part of.
+     */
+    private final Simulation sim;
+
+    /**
      * The Match that generated this game's players.
      */
     private final Match match;
@@ -33,15 +38,21 @@ public class Game {
     private int timeElapsed;
 
     /**
+     * The number of digits in game IDs.
+     */
+    private final static int DIGITS = 9;
+
+    /**
      * Construct a new game.
+     * @param sim The Simulation this match belongs to.
      * @param match The Match that generated this game's players.
      */
-    public Game(Match match) {
+    public Game(Simulation sim, Match match) {
+        this.sim = sim;
         this.match = match;
-        
-        id = "na" + (int)(Math.random() * Integer.MAX_VALUE);
-        
-        totalTime = 10;
+
+        id = "na" + (long)(Math.pow(10, DIGITS) - 1 + Math.random() * 9 * Math.pow(10, DIGITS));
+        totalTime = 20*60 + sim.getRandom().nextInt(30*60);
         timeElapsed = 0;
     }
 
@@ -66,6 +77,14 @@ public class Game {
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     * Return the match this game is composed of.
+     * @return The Match.
+     */
+    public Match getMatch() {
+        return match;
     }
 
     /**

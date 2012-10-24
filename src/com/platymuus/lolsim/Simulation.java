@@ -2,6 +2,7 @@ package com.platymuus.lolsim;
 
 import com.platymuus.lolsim.matchmaking.Match;
 import com.platymuus.lolsim.matchmaking.MatchQueue;
+import com.platymuus.lolsim.matchmaking.Team;
 import com.platymuus.lolsim.players.Summoner;
 
 import java.util.HashMap;
@@ -29,9 +30,14 @@ public class Simulation {
     private final HashSet<Summoner> summoners = new HashSet<Summoner>();
 
     /**
-     * Those players that are online and not in game or otherwise unenterable into queue.
+     * Those players that are online in any form.
      */
     private final HashSet<Summoner> onlineSummoners = new HashSet<Summoner>();
+
+    /**
+     * Summoners that are "busy" and cannot be taken offline or
+     */
+    private final HashSet<Summoner> busySummoners = new HashSet<Summoner>();
 
     /**
      * Ongoing games.
@@ -56,6 +62,14 @@ public class Simulation {
     }
 
     /**
+     * Get the randomness generator associated with this simulation.
+     * @return The SimRandom object.
+     */
+    public SimRandom getRandom() {
+        return random;
+    }
+
+    /**
      * Register a match queue with the simulation.
      * @param queue The MatchQueue to register.
      */
@@ -67,7 +81,7 @@ public class Simulation {
      * Populate the simulation with a few default summoners.
      */
     public void defaultPopulate() {
-        addQueue(new MatchQueue("normal5", 5, 100));
+        addQueue(new MatchQueue(this, "normal5", 5, 100));
         for (int i = 0; i < 1000; ++i) {
             Summoner guy = new Summoner();
             guy.setElo("normal5", 1200);
@@ -95,6 +109,7 @@ public class Simulation {
         // Put players online or offline as needed
         HashSet<Summoner> remove = new HashSet<Summoner>();
         for (Summoner guy : onlineSummoners) {
+            if (busySummoners.contains(guy)) continue;
             if (random.nextTickChance(60 * 60 * 24 * guy.getActivity())) {
                 //log("player offline: " + guy);
                 remove.add(guy);
@@ -108,12 +123,14 @@ public class Simulation {
             }
         }
         onlineSummoners.removeAll(remove);
-        
+
         // Queue players into game
         for (Summoner guy : onlineSummoners) {
+            if (busySummoners.contains(guy)) continue;
             if (random.nextTickChance(5 * 60)) {
                 //log("player queued: " + guy);
                 queues.get("normal5").addPlayers(guy);
+                busySummoners.add(guy);
             }
         }
 
@@ -123,17 +140,21 @@ public class Simulation {
 
             Match match = null;
             while ((match = entry.getValue().getMatch()) != null) {
-                Game game = new Game(match);
+                Game game = new Game(this, match);
                 ongoingGames.add(game);
                 //log("game started: " + game);
             }
         }
-        
+
         // Update games
         for (Game game : new HashSet<Game>(ongoingGames)) {
             game.tick();
             if (game.hasEnded()) {
                 ongoingGames.remove(game);
+                for (Team team : game.getMatch().getTeams()) {
+                    busySummoners.removeAll(game.getMatch().getPlayers(team));
+                }
+                // TODO: contact the stats engine
                 log("result: " + game.getId() + ": " + game.getWinner());
             }
         }
@@ -144,7 +165,7 @@ public class Simulation {
      * @param text The message to log.
      */
     private void log(String text) {
-        System.out.println("[" + timeElapsed + "] " + text);
+        System.out.printf("[%02d:%02d:%02d] %s\n", timeElapsed / 60 / 60, timeElapsed / 60 % 60, timeElapsed % 60, text);
     }
 
 }

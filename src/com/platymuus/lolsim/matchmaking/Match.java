@@ -18,9 +18,9 @@ public class Match {
     private final EnumMap<Team, ArrayList<Summoner>> players = new EnumMap<Team, ArrayList<Summoner>>(Team.class);
 
     /**
-     * The id of the MatchQueue this Match was created by.
+     * The MatchQueue this Match was created by.
      */
-    private final String queue;
+    private final MatchQueue queue;
 
     /**
      * The desired size of each team.
@@ -49,10 +49,10 @@ public class Match {
 
     /**
      * Create a new Match.
-     * @param queue The queue id this Match belongs to.
+     * @param queue The queue this Match belongs to.
      * @param teamSize The desired size of each team.
      */
-    public Match(String queue, int teamSize) {
+    public Match(MatchQueue queue, int teamSize) {
         this.queue = queue;
         this.teamSize = teamSize;
 
@@ -60,6 +60,14 @@ public class Match {
         for (Team team : Team.values()) {
             players.put(team, new ArrayList<Summoner>());
         }
+    }
+
+    /**
+     * Get the queue this match was created by.
+     * @return The parent MatchQueue.
+     */
+    public MatchQueue getQueue() {
+        return queue;
     }
 
     /**
@@ -84,7 +92,7 @@ public class Match {
         
         for (Summoner guy : summoners) {
             players.get(team).add(guy);
-            totalElo += guy.getElo(queue);
+            totalElo += guy.getElo(queue.getName());
         }
         totalElo += summoners.length * summoners.length; // Group elo bonus
         size += summoners.length;

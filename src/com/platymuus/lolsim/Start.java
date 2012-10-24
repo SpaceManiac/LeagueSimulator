@@ -14,7 +14,7 @@ public class Start {
     public static void main(String[] args) {
         Simulation sim = new Simulation();
         
-        args = new String[] { "-default", "-runfor=3600" };
+        args = new String[] { "-default", "-runfor=1d" };
         
         Pattern pattern = Pattern.compile("-{0,2}([-a-zA-Z0-9_]+)(=(.+))?");
         for (String arg : args) {
