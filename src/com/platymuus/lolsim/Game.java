@@ -61,6 +61,14 @@ public class Game {
     }
 
     /**
+     * Get this game's text id.
+     * @return The id.
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
      * Calculate the winning team of this game.
      * @return The winning Team. Not guaranteed to be the same between calls.
      */

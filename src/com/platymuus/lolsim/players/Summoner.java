@@ -26,13 +26,14 @@ public class Summoner {
     /**
      * The player's general skill at video games.
      */
-    private int skill;
+    private int skill= ((int)(Math.random()*100)) + 1;
+        
 
     /**
      * The skill a player gets as he learns how the game works.
      */
-    private int learnedSkill;
-
+    private int learnedSkill=0; 
+    
     /**
      * Map from champion name and number played to how good a player is at said champion.
      */
@@ -41,7 +42,7 @@ public class Summoner {
     /**
      * The amount a play is online between never(0) and 24/7(1).
      */
-    private double activity = 0.2;
+    private double activity = (Math.random()*Math.random()*.25);
 
     /**
      * The map of per-queue information on this summoner.
@@ -54,7 +55,7 @@ public class Summoner {
      */
     public int score() {
         // TODO
-        return 5;
+        return skill + learnedSkill + ((int)(Math.random()*100));
     }
 
     /**

@@ -3,7 +3,6 @@ package com.platymuus.lolsim;
 import com.platymuus.lolsim.matchmaking.Match;
 import com.platymuus.lolsim.matchmaking.MatchQueue;
 import com.platymuus.lolsim.players.Summoner;
-import sun.plugin2.message.GetAppletMessage;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +12,11 @@ import java.util.Map;
  * The meat of the League simulator. Handles
  */
 public class Simulation {
+
+    /**
+     * The Random associated with this simulation.
+     */
+    private final SimRandom random = new SimRandom();
 
     /**
      * The available queues that players may enter.
@@ -91,15 +95,15 @@ public class Simulation {
         // Put players online or offline as needed
         HashSet<Summoner> remove = new HashSet<Summoner>();
         for (Summoner guy : onlineSummoners) {
-            if (Math.random() < tickChanceByTime(60*60*24 * guy.getActivity())) {
-                log("player offline: " + guy);
+            if (random.nextTickChance(60 * 60 * 24 * guy.getActivity())) {
+                //log("player offline: " + guy);
                 remove.add(guy);
             }
         }
         for (Summoner guy : summoners) {
             if (onlineSummoners.contains(guy)) continue;
-            if (Math.random() < tickChanceByTime(60*60*24 * (1 - guy.getActivity()))) {
-                log("player online: " + guy);
+            if (random.nextTickChance(60 * 60 * 24 * (1 - guy.getActivity()))) {
+                //log("player online: " + guy);
                 onlineSummoners.add(guy);
             }
         }
@@ -107,8 +111,8 @@ public class Simulation {
         
         // Queue players into game
         for (Summoner guy : onlineSummoners) {
-            if (Math.random() < tickChanceByTime(5*60)) {
-                log("player queued: " + guy);
+            if (random.nextTickChance(5 * 60)) {
+                //log("player queued: " + guy);
                 queues.get("normal5").addPlayers(guy);
             }
         }
@@ -121,7 +125,7 @@ public class Simulation {
             while ((match = entry.getValue().getMatch()) != null) {
                 Game game = new Game(match);
                 ongoingGames.add(game);
-                log("game started: " + game);
+                //log("game started: " + game);
             }
         }
         
@@ -130,24 +134,9 @@ public class Simulation {
             game.tick();
             if (game.hasEnded()) {
                 ongoingGames.remove(game);
-                log(game + ": " + game.getWinner());
+                log("result: " + game.getId() + ": " + game.getWinner());
             }
         }
-    }
-
-    /**
-     * Calculate the per-tick chance of an event based on the mean number of ticks until that event.
-     * @param mean The mean time it should take for an event to occur, in seconds.
-     * @return The random chance that the event should occur each tick.
-     */
-    private double tickChanceByTime(double mean) {
-        // k = 0.5 = % chance that event will have occurred by the mean
-        // k = 1 - (1 - p)^n
-        // 1 - k = (1 - p)^n
-        // n\(1-k) = 1 - p
-        // n\(1-k) - 1 = -p
-        // p = 1 - n root (1-k)
-        return 1 - Math.pow(1 - 0.5, 1 / mean);
     }
 
     /**
