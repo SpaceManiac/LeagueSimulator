@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * The meat of the League simulator. Handles
+ * The meat of the League simulator. Oversees time management, player tracking and queuing, and game handling.
  */
 public class Simulation {
 
@@ -18,6 +18,11 @@ public class Simulation {
      * The Random associated with this simulation.
      */
     private final SimRandom random = new SimRandom();
+
+    /**
+     * The StatsEngine associated with this simulation.
+     */
+    private final StatsEngine statsEngine = new StatsEngine();
 
     /**
      * The available queues that players may enter.
@@ -100,6 +105,10 @@ public class Simulation {
             subseconds -= 1;
             timeElapsed++;
         }
+        
+        // Temporary
+        log("Games started: " + statsEngine.getGamesStarted());
+        log("Games finished: " + statsEngine.getGamesFinished());
     }
 
     /**
@@ -113,6 +122,7 @@ public class Simulation {
             if (random.nextTickChance(60 * 60 * 24 * guy.getActivity())) {
                 //log("player offline: " + guy);
                 remove.add(guy);
+                statsEngine.playerOffline(guy);
             }
         }
         for (Summoner guy : summoners) {
@@ -120,6 +130,7 @@ public class Simulation {
             if (random.nextTickChance(60 * 60 * 24 * (1 - guy.getActivity()))) {
                 //log("player online: " + guy);
                 onlineSummoners.add(guy);
+                statsEngine.playerOnline(guy);
             }
         }
         onlineSummoners.removeAll(remove);
@@ -131,6 +142,7 @@ public class Simulation {
                 //log("player queued: " + guy);
                 queues.get("normal5").addPlayers(guy);
                 busySummoners.add(guy);
+                statsEngine.playerQueued(guy, "normal5");
             }
         }
 
@@ -142,6 +154,7 @@ public class Simulation {
             while ((match = entry.getValue().getMatch()) != null) {
                 Game game = new Game(this, match);
                 ongoingGames.add(game);
+                statsEngine.gameStarted(game);
                 //log("game started: " + game);
             }
         }
@@ -151,10 +164,10 @@ public class Simulation {
             game.tick();
             if (game.hasEnded()) {
                 ongoingGames.remove(game);
+                statsEngine.gameEnded(game);
                 for (Team team : game.getMatch().getTeams()) {
                     busySummoners.removeAll(game.getMatch().getPlayers(team));
                 }
-                // TODO: contact the stats engine
                 log("result: " + game.getId() + ": " + game.getWinner());
             }
         }

@@ -38,6 +38,11 @@ public class Game {
     private int timeElapsed;
 
     /**
+     * The cached winning team.
+     */
+    private Team winner;
+
+    /**
      * The number of digits in game IDs.
      */
     private final static int DIGITS = 9;
@@ -92,6 +97,8 @@ public class Game {
      * @return The winning Team. Not guaranteed to be the same between calls.
      */
     public Team getWinner() {
+        if (winner != null) return winner;
+
         int totalScore = 0;
         HashMap<Team, Integer> scores = new HashMap<Team, Integer>();
         for (Team team : match.getTeams()) {
@@ -103,15 +110,17 @@ public class Game {
             totalScore += score;
         }
         
-        int randScore = (int)(Math.random() * totalScore);
+        int randScore = sim.getRandom().nextInt(totalScore);
         totalScore = 0;
         for (Team team : match.getTeams()) {
             totalScore += scores.get(team);
             if (randScore <= totalScore) {
+                winner = team;
                 return team;
             }
         }
 
+        // Hopefully shouldn't get here
         return null;
     }
 

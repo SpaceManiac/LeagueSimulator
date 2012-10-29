@@ -26,8 +26,7 @@ public class Summoner {
     /**
      * The player's general skill at video games.
      */
-    private int skill = ((int) (Math.random() * 100)) + 1;
-
+    private int skill;
 
     /**
      * The skill a player gets as he learns how the game works.
@@ -37,17 +36,32 @@ public class Summoner {
     /**
      * Map from champion name and number played to how good a player is at said champion.
      */
-    private HashMap<String, Integer> champs;
+    private final HashMap<String, Integer> champs = new HashMap<String, Integer>();
 
     /**
      * The amount a play is online between never(0) and 24/7(1).
      */
-    private double activity = Math.pow(2.7182,(int)(Math.random())*(-5));
+    private double activity;
 
     /**
      * The map of per-queue information on this summoner.
      */
     private final HashMap<String, QueueInfo> queueInfo = new HashMap<String, QueueInfo>();
+
+    /**
+     * Construct a new summoner.
+     */
+    public Summoner() {
+        activity = calculateActivity();
+        skill = 1 + (int)(Math.random() * 100);
+        name = generateName();
+    }
+
+    private String generateName() {
+        String letters = "abcdefghijklmnopqrstuvwxyz0123456789";
+        // TODO: pull an NPC Quest
+        return Integer.toHexString((int)(Math.random() * 256 * 256));
+    }
 
     /**
      * Calculate the total individual skill score of this summoner.
@@ -56,8 +70,16 @@ public class Summoner {
      */
     public int score() {
         // TODO
-        return skill + learnedSkill + ((int) (Math.random() * 100));
+        return skill + learnedSkill + (int)(Math.random() * 100);
     }
+
+    /**
+     * Is used whevever a player wins or loses a game to determine how much they learned from that game
+     */
+    public void learn() {
+        learnedSkill += (int)(3 * Math.pow(2.71828, -.002 * 2.71828 * (queueInfo("normal5").won + queueInfo("normal5").lost)));
+    }
+
 
     /**
      * Get the Elo rating for this summoner in a given queue.
@@ -129,6 +151,7 @@ public class Summoner {
 
     /**
      * Can set the weight of a player
+     *
      * @param queue
      * @param weight
      */
@@ -143,6 +166,22 @@ public class Summoner {
      */
     public double getActivity() {
         return activity;
+    }
+
+    /**
+     * Calculates a players activity between 1 and 0
+     *
+     * @return activity
+     */
+    private double calculateActivity() {
+        double random = Math.random();
+        if (random < .05) {
+            return Math.pow(2.71828, -60 * random);
+        } else if (random < .95) {
+            return Math.sin(Math.sqrt(random));
+        } else {
+            return (-(Math.pow(random - .8585779, 2) + .02));
+        }
     }
 
     /**
