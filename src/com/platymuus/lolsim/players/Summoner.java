@@ -1,5 +1,7 @@
 package com.platymuus.lolsim.players;
 
+import com.platymuus.lolsim.SimRandom;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -54,13 +56,7 @@ public class Summoner {
     public Summoner() {
         activity = calculateActivity();
         skill = 1 + (int)(Math.random() * 100);
-        name = generateName();
-    }
-
-    private String generateName() {
-        String letters = "abcdefghijklmnopqrstuvwxyz0123456789";
-        // TODO: pull an NPC Quest
-        return Integer.toHexString((int)(Math.random() * 256 * 256));
+        name = SimRandom.generateName();
     }
 
     /**

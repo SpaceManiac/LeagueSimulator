@@ -45,6 +45,11 @@ public class Simulation {
     private final HashSet<Summoner> busySummoners = new HashSet<Summoner>();
 
     /**
+     * Summoners to be removed from their online status.
+     */
+    private final HashSet<Summoner> removeSummoners = new HashSet<Summoner>();
+
+    /**
      * Ongoing games.
      */
     private final HashSet<Game> ongoingGames = new HashSet<Game>();
@@ -109,6 +114,10 @@ public class Simulation {
         // Temporary
         log("Games started: " + statsEngine.getGamesStarted());
         log("Games finished: " + statsEngine.getGamesFinished());
+        
+        for (int i = 0; i < 10; ++i) {
+            log(SimRandom.generateName());
+        }
     }
 
     /**
@@ -118,9 +127,13 @@ public class Simulation {
         // Put players online or offline as needed
         HashSet<Summoner> remove = new HashSet<Summoner>();
         for (Summoner guy : onlineSummoners) {
-            if (busySummoners.contains(guy)) continue;
-            if (random.nextTickChance(60 * 60 * 24 * guy.getActivity())) {
+            if (busySummoners.contains(guy)) {
+                removeSummoners.add(guy);
+            } else if (removeSummoners.contains(guy) || random.nextTickChance(60 * 60 * 24 * guy.getActivity())) {
                 //log("player offline: " + guy);
+                if (removeSummoners.contains(guy)) {
+                    removeSummoners.remove(guy);
+                }
                 remove.add(guy);
                 statsEngine.playerOffline(guy);
             }

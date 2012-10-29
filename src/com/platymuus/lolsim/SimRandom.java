@@ -38,4 +38,39 @@ public class SimRandom extends Random {
         return 1 - Math.pow(1 - 0.5, 1 / mean);
     }
 
+    public static String generateName() {
+        String templates[] = {
+                "Cvc",
+                "Cvcc",
+                "Ccvcv Vc'Ccvvcv",
+                "Ccvcvc CvcCcvccvc",
+                "Ccvcvcvcvvc",
+                "Ccvcccvcc",
+                "Cvccvc",
+
+        };
+        String consonants = "bcdfghijklmnpqrstvwxyz";
+        String vowels = "aeiouy";
+        
+        String template = templates[(int)(Math.random() * templates.length)];
+        String result = "";
+        for (char ch : template.toCharArray()) {
+            if (ch == 'C') {
+                result += Character.toUpperCase(randChar(consonants));
+            } else if (ch == 'c') {
+                result += randChar(consonants);
+            } else if (ch == 'V') {
+                result += Character.toUpperCase(randChar(vowels));
+            } else if (ch == 'v') {
+                result += randChar(vowels);
+            } else {
+                result += ch;
+            }
+        }
+        return result;
+    }
+
+    private static char randChar(String chars) {
+        return chars.charAt((int)(Math.random() * chars.length()));
+    }
 }
