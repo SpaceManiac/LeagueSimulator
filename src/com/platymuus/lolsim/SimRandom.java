@@ -16,6 +16,7 @@ public class SimRandom extends Random {
 
     /**
      * Randomly calculates whether an event should occur this tick based on the mean number of ticks until that event.
+     *
      * @param mean The mean time it should take for an event to occur, in ticks.
      * @return Whether the event should occur this tick.
      */
@@ -25,6 +26,7 @@ public class SimRandom extends Random {
 
     /**
      * Calculate the per-tick chance of an event based on the mean number of ticks until that event.
+     *
      * @param mean The mean time it should take for an event to occur, in seconds.
      * @return The random chance that the event should occur each tick.
      */
@@ -51,8 +53,8 @@ public class SimRandom extends Random {
         };
         String consonants = "bcdfghijklmnpqrstvwxyz";
         String vowels = "aeiouy";
-        
-        String template = templates[(int)(Math.random() * templates.length)];
+
+        String template = templates[(int) (Math.random() * templates.length)];
         String result = "";
         for (char ch : template.toCharArray()) {
             if (ch == 'C') {
@@ -71,6 +73,6 @@ public class SimRandom extends Random {
     }
 
     private static char randChar(String chars) {
-        return chars.charAt((int)(Math.random() * chars.length()));
+        return chars.charAt((int) (Math.random() * chars.length()));
     }
 }

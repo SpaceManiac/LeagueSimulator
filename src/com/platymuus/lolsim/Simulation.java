@@ -4,11 +4,9 @@ import com.platymuus.lolsim.matchmaking.Match;
 import com.platymuus.lolsim.matchmaking.MatchQueue;
 import com.platymuus.lolsim.matchmaking.Team;
 import com.platymuus.lolsim.players.Summoner;
+import com.platymuus.lolsim.players.SummonerCompare;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The meat of the League simulator. Oversees time management, player tracking and queuing, and game handling.
@@ -74,6 +72,7 @@ public class Simulation {
 
     /**
      * Get the randomness generator associated with this simulation.
+     *
      * @return The SimRandom object.
      */
     public SimRandom getRandom() {
@@ -82,6 +81,7 @@ public class Simulation {
 
     /**
      * Register a match queue with the simulation.
+     *
      * @param queue The MatchQueue to register.
      */
     public void addQueue(MatchQueue queue) {
@@ -101,16 +101,33 @@ public class Simulation {
     }
 
     /**
-     * Retrieve the given number of top players by t
+     * Retrieve the given number of top players by their win count in Normal 5s.
+     *
      * @param top The number of players to return.
-     * @return The players ordered by Elo.
+     * @return The players ordered by wins.
      */
     public ArrayList<Summoner> getTopPlayers(int top) {
-        return new ArrayList<Summoner>(summoners);
+        return getTopPlayers(top, new SummonerCompare.MostWins("normal5"));
+    }
+
+    /**
+     * Retrieve the given number of top players as given by the comparator.
+     *
+     * @param top The number of players to return.
+     * @param comp The Summoner comparator used to find the top players.
+     * @return The players ordered by the comparator.
+     */
+    public ArrayList<Summoner> getTopPlayers(int top, Comparator<Summoner> comp) {
+        ArrayList<Summoner> all = new ArrayList<Summoner>(summoners);
+        Collections.sort(all, comp);
+        while (all.size() > top)
+            all.remove(top);
+        return all;
     }
 
     /**
      * Tick the simulation for the given length of simulated time.
+     *
      * @param time The time in seconds to tick for.
      */
     public void update(double time) {
@@ -120,13 +137,13 @@ public class Simulation {
             subseconds -= 1;
             timeElapsed++;
         }
-        
+
         // Temporary
         log("Games started: " + statsEngine.getGamesStarted());
         log("Games finished: " + statsEngine.getGamesFinished());
         log("Players Online " + statsEngine.getOnline());
-        log("Players Offline " +statsEngine.getOffline());
-        
+        log("Players Offline " + statsEngine.getOffline());
+
         for (int i = 0; i < 10; ++i) {
             log(SimRandom.generateName());
         }
@@ -200,6 +217,7 @@ public class Simulation {
 
     /**
      * Log a message along with a simulation timestamp.
+     *
      * @param text The message to log.
      */
     private void log(String text) {

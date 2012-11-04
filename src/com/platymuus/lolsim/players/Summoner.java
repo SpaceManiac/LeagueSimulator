@@ -63,6 +63,7 @@ public class Summoner {
 
     /**
      * Get this Summoner's name.
+     *
      * @return The name.
      */
     public String getName() {
@@ -121,7 +122,7 @@ public class Summoner {
      * Set the win count for this summoner in a given queue.
      *
      * @param queue The queue id.
-     * @param won The number of wins.
+     * @param won   The number of wins.
      */
     public void setWon(String queue, int won) {
         queueInfo(queue).won = won;
@@ -141,7 +142,7 @@ public class Summoner {
      * Set the loss count for this summoner in a given queue.
      *
      * @param queue The queue id.
-     * @param lost The number of losses.
+     * @param lost  The number of losses.
      */
     public void setLost(String queue, int lost) {
         queueInfo(queue).lost = lost;
@@ -174,7 +175,7 @@ public class Summoner {
     /**
      * Set a summoner's preference weight for a given queue.
      *
-     * @param queue The queue id.
+     * @param queue  The queue id.
      * @param weight The preference weight.
      */
     public void setWeight(String queue, int weight) {

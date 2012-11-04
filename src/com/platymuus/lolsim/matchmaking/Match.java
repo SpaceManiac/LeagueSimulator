@@ -1,6 +1,5 @@
 package com.platymuus.lolsim.matchmaking;
 
-import com.platymuus.lolsim.Start;
 import com.platymuus.lolsim.players.Summoner;
 
 import java.util.ArrayList;
@@ -49,7 +48,8 @@ public class Match {
 
     /**
      * Create a new Match.
-     * @param queue The queue this Match belongs to.
+     *
+     * @param queue    The queue this Match belongs to.
      * @param teamSize The desired size of each team.
      */
     public Match(MatchQueue queue, int teamSize) {
@@ -64,6 +64,7 @@ public class Match {
 
     /**
      * Get the queue this match was created by.
+     *
      * @return The parent MatchQueue.
      */
     public MatchQueue getQueue() {
@@ -72,8 +73,9 @@ public class Match {
 
     /**
      * Check if a given set of players can fit into the match.
+     *
      * @param number The number of players to queue together.
-     * @param elo The average Elo of the players.
+     * @param elo    The average Elo of the players.
      * @return True if these players can fit into the match.
      */
     public boolean canAdd(int number, int elo) {
@@ -84,12 +86,13 @@ public class Match {
 
     /**
      * Add players into the match. Should be checked with canAdd first.
+     *
      * @param summoners The players to add to the match.
      */
     public void add(Summoner... summoners) {
         ArrayList<Team> choices = teamChoices(summoners.length);
         Team team = choices.get(0);
-        
+
         for (Summoner guy : summoners) {
             players.get(team).add(guy);
             totalElo += guy.getElo(queue.getName());
@@ -100,6 +103,7 @@ public class Match {
 
     /**
      * Check if the match is ready to be a game.
+     *
      * @return True if all teams are full.
      */
     public boolean isComplete() {
@@ -118,6 +122,7 @@ public class Match {
 
     /**
      * Return the set of teams in this Match.
+     *
      * @return The ser of teams.
      */
     public Set<Team> getTeams() {
@@ -126,6 +131,7 @@ public class Match {
 
     /**
      * Get the players for a given team.
+     *
      * @param team The Team to get players for.
      * @return The list of players.
      */
@@ -135,6 +141,7 @@ public class Match {
 
     /**
      * Calculate which teams can fit the given number of players.
+     *
      * @param length The number of players to fit.
      * @return The list of teams.
      */
@@ -153,7 +160,7 @@ public class Match {
         return "Match{" +
                 "queue='" + queue + '\'' +
                 ", teamSize=" + teamSize +
-                ", size="  + size +
+                ", size=" + size +
                 ", totalElo=" + totalElo +
                 ", range=" + range +
                 ", time=" + time +

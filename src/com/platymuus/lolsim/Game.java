@@ -4,7 +4,6 @@ import com.platymuus.lolsim.matchmaking.Match;
 import com.platymuus.lolsim.matchmaking.Team;
 import com.platymuus.lolsim.players.Summoner;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -49,15 +48,16 @@ public class Game {
 
     /**
      * Construct a new game.
-     * @param sim The Simulation this match belongs to.
+     *
+     * @param sim   The Simulation this match belongs to.
      * @param match The Match that generated this game's players.
      */
     public Game(Simulation sim, Match match) {
         this.sim = sim;
         this.match = match;
 
-        id = "na" + (long)(Math.pow(10, DIGITS) - 1 + Math.random() * 9 * Math.pow(10, DIGITS));
-        totalTime = 20*60 + sim.getRandom().nextInt(30*60);
+        id = "na" + (long) (Math.pow(10, DIGITS) - 1 + Math.random() * 9 * Math.pow(10, DIGITS));
+        totalTime = 20 * 60 + sim.getRandom().nextInt(30 * 60);
         timeElapsed = 0;
     }
 
@@ -70,6 +70,7 @@ public class Game {
 
     /**
      * Determine of the game has ended by now.
+     *
      * @return Whether the game has ended.
      */
     public boolean hasEnded() {
@@ -78,6 +79,7 @@ public class Game {
 
     /**
      * Get this game's text id.
+     *
      * @return The id.
      */
     public String getId() {
@@ -86,6 +88,7 @@ public class Game {
 
     /**
      * Return the match this game is composed of.
+     *
      * @return The Match.
      */
     public Match getMatch() {
@@ -94,6 +97,7 @@ public class Game {
 
     /**
      * Calculate the winning team of this game.
+     *
      * @return The winning Team. Not guaranteed to be the same between calls.
      */
     public Team getWinner() {
@@ -109,7 +113,7 @@ public class Game {
             scores.put(team, score);
             totalScore += score;
         }
-        
+
         int randScore = sim.getRandom().nextInt(totalScore);
         totalScore = 0;
         for (Team team : match.getTeams()) {

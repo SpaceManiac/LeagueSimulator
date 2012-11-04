@@ -2,7 +2,6 @@ package com.platymuus.lolsim;
 
 import com.platymuus.lolsim.gui.GuiFrontend;
 
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,9 +12,9 @@ public class Start {
 
     public static void main(String[] args) {
         Simulation sim = new Simulation();
-        
-        args = new String[] { "-default", "-runfor=1d" };
-        
+
+        args = new String[]{"-default", "-runfor=1d"};
+
         Pattern pattern = Pattern.compile("-{0,2}([-a-zA-Z0-9_]+)(=(.+))?");
         for (String arg : args) {
             Matcher m = pattern.matcher(arg);
@@ -42,8 +41,7 @@ public class Start {
                 int amount;
                 try {
                     amount = Integer.parseInt(data) * mult;
-                }
-                catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     System.err.println("Unable to perform " + arg + ": " + ex);
                     continue;
                 }
