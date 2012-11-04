@@ -2,13 +2,13 @@ package com.platymuus.lolsim.players;
 
 import com.platymuus.lolsim.SimRandom;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Represents persistent data about an individual Summoner.
  */
 public class Summoner {
+
 
     /**
      * The summoner's name.
@@ -49,14 +49,24 @@ public class Summoner {
      * The map of per-queue information on this summoner.
      */
     private final HashMap<String, QueueInfo> queueInfo = new HashMap<String, QueueInfo>();
+    private int logoffs;
+    private int logons;
 
     /**
      * Construct a new summoner.
      */
     public Summoner() {
         activity = calculateActivity();
-        skill = 1 + (int)(Math.random() * 100);
+        skill = 1 + (int) (Math.random() * 100);
         name = SimRandom.generateName();
+    }
+
+    /**
+     * Get this Summoner's name.
+     * @return The name.
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -66,14 +76,14 @@ public class Summoner {
      */
     public int score() {
         // TODO
-        return skill + learnedSkill + (int)(Math.random() * 100);
+        return skill + learnedSkill + (int) (Math.random() * 100);
     }
 
     /**
      * Is used whevever a player wins or loses a game to determine how much they learned from that game
      */
     public void learn() {
-        learnedSkill += (int)(3 * Math.pow(2.71828, -.002 * 2.71828 * (queueInfo("normal5").won + queueInfo("normal5").lost)));
+        learnedSkill += (int) (3 * Math.pow(2.71828, -.002 * 2.71828 * (queueInfo("normal5").won + queueInfo("normal5").lost)));
     }
 
 
@@ -98,58 +108,74 @@ public class Summoner {
     }
 
     /**
-     * number of wins
+     * Get the win count for this summoner in a given queue.
      *
-     * @param queue
-     * @return number of wins
+     * @param queue The queue id.
+     * @return The number of wins.
      */
     public int getWon(String queue) {
         return queueInfo(queue).won;
     }
 
     /**
-     * @param queue
-     * @param won
+     * Set the win count for this summoner in a given queue.
+     *
+     * @param queue The queue id.
+     * @param won The number of wins.
      */
     public void setWon(String queue, int won) {
         queueInfo(queue).won = won;
     }
 
     /**
-     * returns the number of loses
+     * Get the loss count for this summoner in a given queue.
      *
-     * @param queue
-     * @return
+     * @param queue The queue id.
+     * @return The number of losses.
      */
     public int getLost(String queue) {
         return queueInfo(queue).lost;
     }
 
     /**
-     * Can set the number of losses
+     * Set the loss count for this summoner in a given queue.
      *
-     * @param queue
-     * @param lost
+     * @param queue The queue id.
+     * @param lost The number of losses.
      */
     public void setLost(String queue, int lost) {
         queueInfo(queue).lost = lost;
     }
 
     /**
-     * Returns a summoners weight
+     * Add a logon to the summoner's statistics.
+     */
+    public void addLogon() {
+        logons++;
+    }
+
+    /**
+     * Add a logoff to the summoner's statistics.
+     */
+    public void addLogoff() {
+        logoffs++;
+    }
+
+    /**
+     * Returns a summoner's preference weight for a given queue.
      *
-     * @param queue
-     * @return
+     * @param queue The queue id.
+     * @return The preference weight.
      */
     public int getWeight(String queue) {
         return queueInfo(queue).weight;
     }
 
     /**
-     * Can set the weight of a player
+     * Set a summoner's preference weight for a given queue.
      *
-     * @param queue
-     * @param weight
+     * @param queue The queue id.
+     * @param weight The preference weight.
      */
     public void setWeight(String queue, int weight) {
         queueInfo(queue).weight = weight;

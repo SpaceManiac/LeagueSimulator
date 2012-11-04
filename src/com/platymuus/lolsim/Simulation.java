@@ -5,6 +5,7 @@ import com.platymuus.lolsim.matchmaking.MatchQueue;
 import com.platymuus.lolsim.matchmaking.Team;
 import com.platymuus.lolsim.players.Summoner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -100,6 +101,15 @@ public class Simulation {
     }
 
     /**
+     * Retrieve the given number of top players by t
+     * @param top The number of players to return.
+     * @return The players ordered by Elo.
+     */
+    public ArrayList<Summoner> getTopPlayers(int top) {
+        return new ArrayList<Summoner>(summoners);
+    }
+
+    /**
      * Tick the simulation for the given length of simulated time.
      * @param time The time in seconds to tick for.
      */
@@ -114,6 +124,8 @@ public class Simulation {
         // Temporary
         log("Games started: " + statsEngine.getGamesStarted());
         log("Games finished: " + statsEngine.getGamesFinished());
+        log("Players Online " + statsEngine.getOnline());
+        log("Players Offline " +statsEngine.getOffline());
         
         for (int i = 0; i < 10; ++i) {
             log(SimRandom.generateName());

@@ -4,20 +4,20 @@ import com.platymuus.lolsim.matchmaking.Team;
 import com.platymuus.lolsim.players.Summoner;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 
 /**
  * Handles manipulation of summoner Elo, wins, and losses and other game statistics.
  */
 public class StatsEngine {
-    
+
     // === Properties
-    
+
     private final EnumMap<Team, Integer> teamWins = new EnumMap<Team, Integer>(Team.class);
-    
+    private int online = 0;
+    private int offline = 0;
     private int gamesStarted;
     private int gamesFinished;
-    
+
     // === Oversight
 
     /**
@@ -38,14 +38,17 @@ public class StatsEngine {
         gamesStarted = 0;
         gamesFinished = 0;
     }
-    
+
     // === Stats entry
 
     public void playerOffline(Summoner guy) {
-        // TODO: keep tr
+        offline++;
+        guy.addLogoff();
     }
 
     public void playerOnline(Summoner guy) {
+        online++;
+        guy.addLogon();
     }
 
     public void playerQueued(Summoner guy, String normal5) {
@@ -75,7 +78,7 @@ public class StatsEngine {
             }
         }
     }
-    
+
     // === Stats querying
 
 
@@ -85,5 +88,13 @@ public class StatsEngine {
 
     public int getGamesFinished() {
         return gamesFinished;
+    }
+
+    public int getOnline() {
+        return online;
+    }
+
+    public int getOffline() {
+        return offline;
     }
 }
