@@ -1,5 +1,6 @@
 package com.platymuus.lolsim;
 
+import com.platymuus.lolsim.matchmaking.Match;
 import com.platymuus.lolsim.matchmaking.Team;
 import com.platymuus.lolsim.players.Summoner;
 
@@ -13,6 +14,7 @@ public class StatsEngine {
     // === Properties
 
     private final EnumMap<Team, Integer> teamWins = new EnumMap<Team, Integer>(Team.class);
+    private double gameMinutes = 0;
     private int online = 0;
     private int offline = 0;
     private int gamesStarted;
@@ -59,14 +61,22 @@ public class StatsEngine {
     }
 
     public void gameEnded(Game game) {
-        String queue = game.getMatch().getQueue().getName();
+        // General stats
         ++gamesFinished;
+        gameMinutes += game.getLength() / 60.0;
         teamWins.put(game.getWinner(), teamWins.get(game.getWinner()) + 1);
-        // TODO: keep track of how long games last
-        for (Team team : game.getMatch().getTeams()) {
-            for (Summoner guy : game.getMatch().getPlayers(team)) {
+
+        // Stuff for this match
+        Match match = game.getMatch();
+        String queue = match.getQueue().getName();
+        EnumMap<Team, Integer> eloDeltas = calculateElos(match, game.getWinner());
+
+        for (Team team : match.getTeams()) {
+            for (Summoner guy : match.getPlayers(team)) {
                 guy.learn();
-                // TODO: elo
+
+                guy.setElo(queue, guy.getElo(queue) + eloDeltas.get(team));
+
                 if (team == game.getWinner()) {
                     guy.setWon(queue, guy.getWon(queue) + 1);
                 } else {
@@ -79,8 +89,36 @@ public class StatsEngine {
         }
     }
 
-    // === Stats querying
+    private EnumMap<Team, Integer> calculateElos(Match match, Team winner) {
+        EnumMap<Team, Double> quotients = new EnumMap<Team, Double>(Team.class);
+        EnumMap<Team, Integer> deltas = new EnumMap<Team, Integer>(Team.class);
+        double quotientSum = 0;
 
+        // TODO: make this level out to 25 for some games
+        // TODO: first 10 matches are placement matches & treated as if elo = 1200
+        double kConstant = 60;
+
+        for (Team team : match.getTeams()) {
+            int elo = 0, people = 0;
+            for (Summoner guy : match.getPlayers(team)) {
+                elo += guy.getElo(match.getQueue().getName());
+                people++;
+            }
+
+            double q = Math.pow(10, (elo / people) / 400.0);
+            quotients.put(team, q);
+            quotientSum += q;
+        }
+        for (Team team : match.getTeams()) {
+            double expected = quotients.get(team) / quotientSum;
+            double delta = kConstant * ((winner == team ? 1 : 0) - expected);
+            deltas.put(team, (int) Math.round(delta));
+        }
+
+        return deltas;
+    }
+
+    // === Stats querying
 
     public int getGamesStarted() {
         return gamesStarted;

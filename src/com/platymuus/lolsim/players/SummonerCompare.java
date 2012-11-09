@@ -6,9 +6,10 @@ import java.util.Comparator;
  * Container class for summoner comparators.
  */
 public final class SummonerCompare {
-    
-    private SummonerCompare() {}
-    
+
+    private SummonerCompare() {
+    }
+
     private static abstract class PerQueue implements Comparator<Summoner> {
         protected final String queue;
 
@@ -36,5 +37,5 @@ public final class SummonerCompare {
             return o2.getElo("normal5") - o1.getElo("normal5");
         }
     }
-    
+
 }

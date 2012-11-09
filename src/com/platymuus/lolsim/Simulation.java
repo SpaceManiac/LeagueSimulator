@@ -80,6 +80,15 @@ public class Simulation {
     }
 
     /**
+     * Get how long the simulation has been running in seconds.
+     *
+     * @return The elapsed time.
+     */
+    public long getTimeElapsed() {
+        return timeElapsed;
+    }
+
+    /**
      * Register a match queue with the simulation.
      *
      * @param queue The MatchQueue to register.
@@ -113,7 +122,7 @@ public class Simulation {
     /**
      * Retrieve the given number of top players as given by the comparator.
      *
-     * @param top The number of players to return.
+     * @param top  The number of players to return.
      * @param comp The Summoner comparator used to find the top players.
      * @return The players ordered by the comparator.
      */
@@ -223,5 +232,4 @@ public class Simulation {
     private void log(String text) {
         System.out.printf("[%02d:%02d:%02d] %s\n", timeElapsed / 60 / 60, timeElapsed / 60 % 60, timeElapsed % 60, text);
     }
-
 }

@@ -74,7 +74,7 @@ public class Game {
      * @return Whether the game has ended.
      */
     public boolean hasEnded() {
-        return timeElapsed > totalTime;
+        return timeElapsed >= totalTime;
     }
 
     /**
@@ -136,5 +136,9 @@ public class Game {
                 ", totalTime=" + totalTime +
                 ", timeElapsed=" + timeElapsed +
                 '}';
+    }
+
+    public double getLength() {
+        return timeElapsed;
     }
 }

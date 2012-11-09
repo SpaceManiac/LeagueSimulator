@@ -49,10 +49,26 @@ public class SimRandom extends Random {
                 "Ccvcvcvcvvc",
                 "Ccvcccvcc",
                 "Cvccvc",
+                "Cvcvc",
+                "Cvcccvc",
+                "Cvcccc",
+                "Vcvcvvc",
+                "Vcvcv",
+                "Cvcn",
+                "Cvcnn",
+                "CnC",
+                "Cvcvccvcvv",
+                "Cvccvc",
+                "Cvcvc",
+                "Cvcccvc",
+                "Cvc",
+                "Cvcc",
+
 
         };
         String consonants = "bcdfghijklmnpqrstvwxyz";
         String vowels = "aeiouy";
+        String numbers = "123456789";
 
         String template = templates[(int) (Math.random() * templates.length)];
         String result = "";
@@ -65,6 +81,8 @@ public class SimRandom extends Random {
                 result += Character.toUpperCase(randChar(vowels));
             } else if (ch == 'v') {
                 result += randChar(vowels);
+            } else if (ch == 'n') {
+                result += randChar(numbers);
             } else {
                 result += ch;
             }
