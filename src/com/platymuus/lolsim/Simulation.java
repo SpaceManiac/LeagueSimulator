@@ -146,12 +146,16 @@ public class Simulation {
             subseconds -= 1;
             timeElapsed++;
         }
+    }
 
-        // Temporary
+    /**
+     * Debugging method.
+     */
+    public void printStats() {
         log("Games started: " + statsEngine.getGamesStarted());
         log("Games finished: " + statsEngine.getGamesFinished());
-        log("Players Online " + statsEngine.getOnline());
-        log("Players Offline " + statsEngine.getOffline());
+        log("Player logons: " + statsEngine.getOnline());
+        log("Player logoffs: " + statsEngine.getOffline());
 
         for (int i = 0; i < 10; ++i) {
             log(SimRandom.generateName());

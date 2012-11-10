@@ -63,8 +63,6 @@ public class SimRandom extends Random {
                 "Cvcccvc",
                 "Cvc",
                 "Cvcc",
-
-
         };
         String consonants = "bcdfghijklmnpqrstvwxyz";
         String vowels = "aeiouy";
