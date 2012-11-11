@@ -48,18 +48,18 @@ public class GuiFrontend {
         this.sim = sim;
         
         timer = new Timer(100, new TimerAction());
-        setGameSpeed(60);
+        setGameSpeed(60 * 60);
     }
 
     private void setGameSpeed(double speed) {
-        int ms = (int)(1000.0 / speed);
-        if (ms > 1000) {
-            ms = 1000;
-        } else if (ms < 50) {
-            ms = 50;
+        double tps = speed; // ticks per second
+        if (tps > 50) {
+            tps = 50;
+        } else if (tps < 1) {
+            tps = 1;
         }
-        timer.setDelay(ms);
-        gameSpeed = speed * 1000.0 / ms;
+        timer.setDelay((int) (1000.0 / tps));
+        gameSpeed = speed / tps; // simulated seconds per tick
     }
 
     public void start() {
@@ -99,7 +99,7 @@ public class GuiFrontend {
 
     private class TimerAction implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            sim.update(timer.getDelay() * gameSpeed);
+            sim.update(gameSpeed);
             postTickActions();
         }
     }
