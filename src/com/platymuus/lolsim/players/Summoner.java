@@ -199,9 +199,9 @@ public class Summoner {
     private double calculateActivity() {
         double random = Math.random();
         if (random < .05) {
-            return Math.pow(2.71828, -60 * random);
+            return Math.pow(Math.E, -60 * random);
         } else if (random < .95) {
-            return Math.sin(Math.sqrt(random));
+            return Math.sin(Math.sqrt(random) * Math.PI / 180);
         } else {
             return (-(Math.pow(random - .8585779, 2) + .02));
         }

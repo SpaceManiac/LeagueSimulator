@@ -5,6 +5,7 @@ import com.platymuus.lolsim.matchmaking.MatchQueue;
 import com.platymuus.lolsim.matchmaking.Team;
 import com.platymuus.lolsim.players.Summoner;
 import com.platymuus.lolsim.players.SummonerCompare;
+import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 
 import java.util.*;
 
@@ -235,5 +236,10 @@ public class Simulation {
      */
     private void log(String text) {
         System.out.printf("[%02d:%02d:%02d] %s\n", timeElapsed / 60 / 60, timeElapsed / 60 % 60, timeElapsed % 60, text);
+    }
+
+
+    public HashSet<Summoner> getOnlineSummoners() {
+        return onlineSummoners;
     }
 }
