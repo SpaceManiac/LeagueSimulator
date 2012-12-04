@@ -84,7 +84,7 @@ public class Summoner {
      * Is used whevever a player wins or loses a game to determine how much they learned from that game
      */
     public void learn() {
-        learnedSkill += (int) (3 * Math.pow(2.71828, -.002 * 2.71828 * (queueInfo("normal5").won + queueInfo("normal5").lost)));
+        learnedSkill += (int) (3 * Math.pow(Math.E, -.002 * Math.E * (queueInfo("normal5").won + queueInfo("normal5").lost)));
     }
 
 

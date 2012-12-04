@@ -103,7 +103,6 @@ public class Game {
     public Team getWinner() {
         if (winner != null) return winner;
 
-        int totalScore = 0;
         HashMap<Team, Integer> scores = new HashMap<Team, Integer>();
         for (Team team : match.getTeams()) {
             int score = 0;
@@ -111,21 +110,11 @@ public class Game {
                 score += guy.score();
             }
             scores.put(team, score);
-            totalScore += score;
         }
 
-        int randScore = sim.getRandom().nextInt(totalScore);
-        totalScore = 0;
-        for (Team team : match.getTeams()) {
-            totalScore += scores.get(team);
-            if (randScore <= totalScore) {
-                winner = team;
-                return team;
-            }
-        }
+        winner = sim.getRandom().weightedRandom(scores);
 
-        // Hopefully shouldn't get here
-        return null;
+        return winner;
     }
 
     @Override

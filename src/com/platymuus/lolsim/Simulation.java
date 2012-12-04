@@ -1,11 +1,12 @@
 package com.platymuus.lolsim;
 
+import com.platymuus.lolsim.log.PrintLogListener;
 import com.platymuus.lolsim.matchmaking.Match;
 import com.platymuus.lolsim.matchmaking.MatchQueue;
 import com.platymuus.lolsim.matchmaking.Team;
 import com.platymuus.lolsim.players.Summoner;
 import com.platymuus.lolsim.players.SummonerCompare;
-import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
+import com.platymuus.lolsim.log.LogListener;
 
 import java.util.*;
 
@@ -55,6 +56,11 @@ public class Simulation {
     private final HashSet<Game> ongoingGames = new HashSet<Game>();
 
     /**
+     * A list of log listeners.
+     */
+    private final ArrayList<LogListener> logListeners = new ArrayList<LogListener>();
+
+    /**
      * The amount of time the simulation has been running.
      */
     private long timeElapsed = 0;
@@ -68,7 +74,7 @@ public class Simulation {
      * Construct a new simulation.
      */
     public Simulation() {
-
+        logListeners.add(new PrintLogListener(true)); // true for debug
     }
 
     /**
@@ -230,14 +236,32 @@ public class Simulation {
     }
 
     /**
-     * Log a message along with a simulation timestamp.
+     * Log an informational message.
      *
      * @param text The message to log.
      */
-    private void log(String text) {
-        System.out.printf("[%02d:%02d:%02d] %s\n", timeElapsed / 60 / 60, timeElapsed / 60 % 60, timeElapsed % 60, text);
+    public void log(String text) {
+        issueLog(false, text);
     }
 
+    /**
+     * Log a debug message.
+     *
+     * @param text The message to log.
+     */
+    public void logDebug(String text) {
+        issueLog(true, text);
+    }
+
+    private void issueLog(boolean debug, String text) {
+        for (LogListener l : logListeners) {
+            l.onLog(debug, timeElapsed, text);
+        }
+    }
+
+    public static String formatTime(long time) {
+        return String.format("%02d:%02d:%02d", time / 60 / 60, time / 60 % 60, time % 60);
+    }
 
     public HashSet<Summoner> getOnlineSummoners() {
         return onlineSummoners;

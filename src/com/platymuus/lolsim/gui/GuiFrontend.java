@@ -68,6 +68,7 @@ public class GuiFrontend {
         screen.timeSlider.addChangeListener(new SliderListener());
 
         screen.summonerTable.setModel(new SummonerTableModel());
+        screen.summonerTable.getTableHeader().setVisible(true);
 
         frame = makeFrame("League Simulator", screen.mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

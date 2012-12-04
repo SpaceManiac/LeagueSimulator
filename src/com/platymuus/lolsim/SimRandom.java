@@ -1,5 +1,10 @@
 package com.platymuus.lolsim;
 
+import com.platymuus.lolsim.matchmaking.Team;
+import com.platymuus.lolsim.players.Summoner;
+
+import java.util.Collection;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -91,4 +96,20 @@ public class SimRandom extends Random {
     private static char randChar(String chars) {
         return chars.charAt((int) (Math.random() * chars.length()));
     }
+    
+    public <T> T weightedRandom(final Map<T, ? extends Number> items) {
+        double total = 0;
+        for (Number n : items.values()) {
+            total += n.doubleValue();
+        }
+
+        double random = nextDouble() * total;
+        total = 0;
+        for (Map.Entry<T, ? extends Number> entry : items.entrySet()) {
+            total += entry.getValue().doubleValue();
+            if (random < total) return entry.getKey();
+        }
+        return items.entrySet().iterator().next().getKey(); // should never happen
+    }
+
 }
