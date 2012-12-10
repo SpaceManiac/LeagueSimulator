@@ -68,7 +68,6 @@ public class GuiFrontend {
         screen.timeSlider.addChangeListener(new SliderListener());
 
         screen.summonerTable.setModel(new SummonerTableModel());
-        screen.summonerTable.getTableHeader().setVisible(true);
 
         frame = makeFrame("League Simulator", screen.mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,10 +99,6 @@ public class GuiFrontend {
         screen.timeDisplay.setText(message);
 
         ((SummonerTableModel) screen.summonerTable.getModel()).update();
-    }
-
-    private String nameFrom(String description) {
-        return description.substring(description.indexOf(". "), description.indexOf(" ", description.indexOf(". ") + 2));
     }
     
     private JFrame makeFrame(String title, JPanel panel) {

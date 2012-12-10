@@ -4,6 +4,7 @@ import com.platymuus.lolsim.matchmaking.Team;
 import com.platymuus.lolsim.players.Summoner;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -111,5 +112,16 @@ public class SimRandom extends Random {
         }
         return items.entrySet().iterator().next().getKey(); // should never happen
     }
+    
+    public <T> T weightedRandom(final Iterable<T> items, Weighted<T> weight) {
+        HashMap<T, Double> map = new HashMap<T, Double>();
+        for (T t : items) {
+            map.put(t, weight.weigh(t));
+        }
+        return weightedRandom(map);
+    }
 
+    public static interface Weighted<T> {
+        public double weigh(T t);
+    }
 }

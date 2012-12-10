@@ -74,7 +74,14 @@ public class Simulation {
      * Construct a new simulation.
      */
     public Simulation() {
-        logListeners.add(new PrintLogListener(true)); // true for debug
+    }
+
+    /**
+     * Add a log listener.
+     * @param log The log listener to add.
+     */
+    public void addLogListener(LogListener log) {
+        logListeners.add(log);
     }
 
     /**
@@ -217,7 +224,7 @@ public class Simulation {
                 Game game = new Game(this, match);
                 ongoingGames.add(game);
                 statsEngine.gameStarted(game);
-                //log("game started: " + game);
+                logDebug("Game started: " + game);
             }
         }
 
@@ -230,6 +237,7 @@ public class Simulation {
                 for (Team team : game.getMatch().getTeams()) {
                     busySummoners.removeAll(game.getMatch().getPlayers(team));
                 }
+                logDebug("Game ended: " + game);
                 log("result: " + game.getId() + ": " + game.getWinner());
             }
         }

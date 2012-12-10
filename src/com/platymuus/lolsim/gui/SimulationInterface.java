@@ -15,6 +15,8 @@ public class SimulationInterface {
     protected JPanel displayPanel;
     protected JLabel versionLabel;
     protected JTable summonerTable;
+    private JScrollPane tableScrollPane;
+    private JComboBox comboBox1;
 
     private void createUIComponents() {
         // TODO: place custom component creation code here

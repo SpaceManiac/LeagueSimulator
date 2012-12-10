@@ -1,14 +1,9 @@
 package com.platymuus.lolsim.gui;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: HopkinsJ3232
- * Date: 11/13/12
- * Time: 2:49 PM
- * To change this template use File | Settings | File Templates.
- */
 public class DisplayChoices {
     private JCheckBox averageEloCheckBox;
     private JCheckBox mostLosesCheckBox;
@@ -22,5 +17,15 @@ public class DisplayChoices {
 
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+
+    public List<String> getPieces() {
+        ArrayList<String> result = new ArrayList<String>();
+
+        return result;
+    }
+    
+    private void piece(List<String> l, JCheckBox c, String n, Object v) {
+        if (c.isSelected()) l.add(n + ": " + v);
     }
 }

@@ -1,6 +1,7 @@
 package com.platymuus.lolsim;
 
 import com.platymuus.lolsim.gui.GuiFrontend;
+import com.platymuus.lolsim.log.PrintLogListener;
 
 import javax.swing.*;
 import java.util.regex.Matcher;
@@ -13,6 +14,8 @@ public class Start {
 
     public static void main(String[] args) {
         Simulation sim = new Simulation();
+        
+        boolean log = true, logDebug = false;
 
         args = new String[]{"-default"};
 
@@ -49,7 +52,15 @@ public class Start {
                 sim.update(amount);
             } else if (param.equalsIgnoreCase("printstats")) {
                 sim.printStats();
+            } else if (param.equalsIgnoreCase("nolog")) {
+                log = false;
+            } else if (param.equalsIgnoreCase("debug")) {
+                logDebug = log = true;
             }
+        }
+        
+        if (log) {
+            sim.addLogListener(new PrintLogListener(logDebug));
         }
 
         GuiFrontend front = new GuiFrontend(sim);
