@@ -12,11 +12,12 @@ public class SimulationInterface {
     protected JPanel mainPanel;
     protected JLabel timeDisplay;
     protected JPanel optDisplayPanel;
-    protected JPanel displayPanel;
     protected JLabel versionLabel;
     protected JTable summonerTable;
-    private JScrollPane tableScrollPane;
-    private JComboBox comboBox1;
+    protected JScrollPane tableScrollPane;
+    protected JComboBox queuePicker;
+    protected JTextArea logText;
+    protected JScrollPane logScrollPane;
 
     private void createUIComponents() {
         // TODO: place custom component creation code here

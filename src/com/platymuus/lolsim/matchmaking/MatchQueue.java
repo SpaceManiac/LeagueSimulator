@@ -38,8 +38,14 @@ public class MatchQueue {
     private final int teamSize;
 
     /**
+     * The relative popularity of this queue.
+     */
+    private final int popularity;
+
+    /**
      * Initialize a new match queue.
      *
+     * @param sim        The simulation attached to the queue.
      * @param name       The short name of this queue, e.g. "normal5".
      * @param teamSize   The size of teams in this queue (usually 3 or 5).
      * @param popularity How popular in general this queue is.
@@ -48,6 +54,7 @@ public class MatchQueue {
         this.sim = sim;
         this.name = name;
         this.teamSize = teamSize;
+        this.popularity = popularity;
     }
 
     /**
@@ -134,5 +141,13 @@ public class MatchQueue {
                 ", matches=" + matches.size() +
                 ", completedMatches=" + completedMatches.size() +
                 '}';
+    }
+
+    /**
+     * Get the popularity.
+     * @return The popularity.
+     */
+    public int getPopularity() {
+        return popularity;
     }
 }

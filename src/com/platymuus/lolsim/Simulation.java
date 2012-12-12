@@ -115,22 +115,15 @@ public class Simulation {
      * Populate the simulation with a few default summoners.
      */
     public void defaultPopulate() {
-        addQueue(new MatchQueue(this, "normal5", 5, 100));
+        addQueue(new MatchQueue(this, "normal5x5", 5, 100));
+        addQueue(new MatchQueue(this, "ranked5x5", 5, 20));
+        addQueue(new MatchQueue(this, "normal3x3", 3, 10));
+        addQueue(new MatchQueue(this, "ranked3x3", 3, 7));
+        addQueue(new MatchQueue(this, "dominion5x5", 5, 23));
         for (int i = 0; i < 1000; ++i) {
             Summoner guy = new Summoner();
-            guy.setElo("normal5", 1200);
             summoners.add(guy);
         }
-    }
-
-    /**
-     * Retrieve the given number of top players by their win count in Normal 5s.
-     *
-     * @param top The number of players to return.
-     * @return The players ordered by wins.
-     */
-    public ArrayList<Summoner> getTopPlayers(int top) {
-        return getTopPlayers(top, new SummonerCompare.MostWins("normal5"));
     }
 
     /**
@@ -143,7 +136,8 @@ public class Simulation {
     public ArrayList<Summoner> getTopPlayers(int top, Comparator<Summoner> comp) {
         ArrayList<Summoner> all = new ArrayList<Summoner>(summoners);
         Collections.sort(all, comp);
-        while (all.size() > top)
+        int diff = all.size() - top;
+        for (int i = 0; i < diff; ++i)
             all.remove(top);
         return all;
     }
@@ -170,10 +164,6 @@ public class Simulation {
         log("Games finished: " + statsEngine.getGamesFinished());
         log("Player logons: " + statsEngine.getOnline());
         log("Player logoffs: " + statsEngine.getOffline());
-
-        for (int i = 0; i < 10; ++i) {
-            log(SimRandom.generateName());
-        }
     }
 
     /**
@@ -209,9 +199,16 @@ public class Simulation {
             if (busySummoners.contains(guy)) continue;
             if (random.nextTickChance(5 * 60)) {
                 //log("player queued: " + guy);
-                queues.get("normal5").addPlayers(guy);
+                MatchQueue queue = random.weightedRandom(queues.values(), new SimRandom.Weighted<MatchQueue>() {
+                    @Override
+                    public double weigh(MatchQueue matchQueue) {
+                        return matchQueue.getPopularity();
+                    }
+                });
+
+                queue.addPlayers(guy);
                 busySummoners.add(guy);
-                statsEngine.playerQueued(guy, "normal5");
+                statsEngine.playerQueued(guy, queue.getName());
             }
         }
 
@@ -238,7 +235,7 @@ public class Simulation {
                     busySummoners.removeAll(game.getMatch().getPlayers(team));
                 }
                 logDebug("Game ended: " + game);
-                log("result: " + game.getId() + ": " + game.getWinner());
+                log("Result: " + game.getId() + ": " + game.getWinner());
             }
         }
     }
@@ -273,5 +270,9 @@ public class Simulation {
 
     public HashSet<Summoner> getOnlineSummoners() {
         return onlineSummoners;
+    }
+
+    public HashMap<String,MatchQueue> getQueues() {
+        return queues;
     }
 }

@@ -1,24 +1,26 @@
 package com.platymuus.lolsim.gui;
 
 import com.platymuus.lolsim.Simulation;
+import com.platymuus.lolsim.log.LogListener;
+import com.platymuus.lolsim.matchmaking.MatchQueue;
 import com.platymuus.lolsim.players.Summoner;
 import com.platymuus.lolsim.players.SummonerCompare;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.TableHeaderUI;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 
 /**
  * A graphical frontend to the simulation.
  */
-public class GuiFrontend {
+public class GuiFrontend implements LogListener {
 
     /**
      * The simulation being controlled.
@@ -34,6 +36,11 @@ public class GuiFrontend {
      * The frame containing the form.
      */
     private JFrame frame;
+
+    /**
+     * The quick display selector dialog.
+     */
+    private DisplayChoices displayChoices;
 
     /**
      * The timer controlling ticks.
@@ -64,16 +71,46 @@ public class GuiFrontend {
     }
 
     public void start() {
+        sim.addLogListener(this);
         screen = new SimulationInterface();
-        screen.timeSlider.addChangeListener(new SliderListener());
 
+        screen.timeSlider.addChangeListener(new SliderListener());
         screen.summonerTable.setModel(new SummonerTableModel());
+        screen.optDisplayPanel.setAlignmentX(0);
+
+        // Quick display
+        displayChoices = new DisplayChoices();
+        screen.quickDisplayButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                makeFrame("Quick Display Options", displayChoices.getMainPanel());
+            }
+        });
+
+        // Queue picker
+        DefaultComboBoxModel combo = new DefaultComboBoxModel();
+        for (MatchQueue queue : sim.getQueues().values()) {
+            combo.addElement(queue.getName());
+        }
+        screen.queuePicker.setModel(combo);
+        screen.queuePicker.addActionListener(new ActionListener() {
+            final JComboBox box = screen.queuePicker;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((SummonerTableModel) screen.summonerTable.getModel()).setQueue("" + box.getSelectedItem());
+            }
+        });
 
         frame = makeFrame("League Simulator", screen.mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setGameSpeed(60 * 60);
         timer.start();
+    }
+
+    public void stop() {
+        timer.stop();
+        frame.setVisible(false);
     }
 
     private void setGameSpeed(double speed) {
@@ -98,7 +135,16 @@ public class GuiFrontend {
         String message = String.format("Time elapsed: %dd%02dh%02dm%02ds", days, hours, minutes, seconds);
         screen.timeDisplay.setText(message);
 
+        // Update the summoners table
         ((SummonerTableModel) screen.summonerTable.getModel()).update();
+        
+        // Update the quick stats
+        screen.optDisplayPanel.removeAll();
+        for (String s : displayChoices.getPieces(sim)) {
+            screen.optDisplayPanel.add(new JLabel(s));
+        }
+        screen.optDisplayPanel.add(new JLabel("~"));
+        screen.optDisplayPanel.repaint();
     }
     
     private JFrame makeFrame(String title, JPanel panel) {
@@ -108,6 +154,14 @@ public class GuiFrontend {
         frame.setVisible(true);
         frame.pack();
         return frame;
+    }
+
+    @Override
+    public void onLog(boolean debug, long time, String logLine) {
+        if (!debug) {
+            String line = "[" + Simulation.formatTime(time) + "] " + logLine;
+            screen.logText.setText(screen.logText.getText() + line + "\n");
+        }
     }
 
     private class TimerAction implements ActionListener {
@@ -125,13 +179,19 @@ public class GuiFrontend {
     }
 
     private class SummonerTableModel extends AbstractTableModel {
-        private final String[] names = { "", "Username", "Elo", "Won", "Lost", "Activity", "Online" };
+        private final String[] names = { "", "Username", "Elo", "Wins", "Losses", "Activity", "Online" };
 
-        private Comparator<Summoner> compare = new SummonerCompare.MostElo("normal5");
+        private String queue = "normal5x5";
+        private Comparator<Summoner> compare = new SummonerCompare.MostElo("normal5x5");
         private ArrayList<Summoner> guys;
 
         private SummonerTableModel() {
             update();
+        }
+
+        public void setQueue(String q) {
+            queue = q;
+            compare = new SummonerCompare.MostEloHideNoobs(q);
         }
 
         @Override
@@ -143,11 +203,11 @@ public class GuiFrontend {
                 case 1: // name
                     return guy.getName();
                 case 2: // elo
-                    return guy.getElo("normal5");
-                case 3: // win
-                    return guy.getWon("normal5");
+                    return guy.getElo(queue);
+                case 3: // wins
+                    return guy.getWon(queue);
                 case 4: // losses
-                    return guy.getLost("normal5");
+                    return guy.getLost(queue);
                 case 5: // activity
                     return guy.getActivity();
                 case 6:
@@ -163,7 +223,7 @@ public class GuiFrontend {
                 select = guys.get(sel);
             }
 
-            guys = sim.getTopPlayers(30, compare);
+            guys = sim.getTopPlayers(100, compare);
             fireTableDataChanged();
 
             if (select != null) {

@@ -46,6 +46,11 @@ public class Summoner {
     private double activity;
 
     /**
+     * The number of games played and learned from.
+     */
+    private int gamesPlayed;
+
+    /**
      * The map of per-queue information on this summoner.
      */
     private final HashMap<String, QueueInfo> queueInfo = new HashMap<String, QueueInfo>();
@@ -76,7 +81,6 @@ public class Summoner {
      * @return The score.
      */
     public int score() {
-        // TODO
         return skill + learnedSkill + (int) (Math.random() * 100);
     }
 
@@ -84,7 +88,8 @@ public class Summoner {
      * Is used whevever a player wins or loses a game to determine how much they learned from that game
      */
     public void learn() {
-        learnedSkill += (int) (3 * Math.pow(Math.E, -.002 * Math.E * (queueInfo("normal5").won + queueInfo("normal5").lost)));
+        gamesPlayed += 1;
+        learnedSkill += (int) (3 * Math.pow(Math.E, -.002 * Math.E * gamesPlayed));
     }
 
 

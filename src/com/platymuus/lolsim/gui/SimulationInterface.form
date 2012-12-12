@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="7" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="795" height="482"/>
+      <xy x="20" y="20" width="781" height="482"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -32,16 +32,6 @@
           <text value="Edit &amp;Quick Display"/>
         </properties>
       </component>
-      <grid id="b174c" binding="displayPanel" layout-manager="GridBagLayout">
-        <constraints>
-          <grid row="2" column="1" row-span="5" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <minimum-size width="200" height="400"/>
-          </grid>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children/>
-      </grid>
       <component id="942ec" class="javax.swing.JButton" binding="optionsButton" default-binding="true">
         <constraints>
           <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -91,34 +81,60 @@
           <paintTicks value="true"/>
         </properties>
       </component>
-      <scrollpane id="c5059" binding="tableScrollPane">
-        <constraints>
-          <grid row="2" column="0" row-span="5" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <minimum-size width="200" height="400"/>
-          </grid>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="43b67" class="javax.swing.JTable" binding="summonerTable">
-            <constraints/>
-            <properties>
-              <intercellSpacing width="2" height="1"/>
-              <showHorizontalLines value="true"/>
-              <showVerticalLines value="true"/>
-            </properties>
-          </component>
-        </children>
-      </scrollpane>
-      <component id="cb9f7" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+      <component id="cb9f7" class="javax.swing.JComboBox" binding="queuePicker">
         <constraints>
           <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
       </component>
+      <splitpane id="93011">
+        <constraints>
+          <grid row="2" column="0" row-span="5" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="200"/>
+          </grid>
+        </constraints>
+        <properties>
+          <dividerLocation value="453"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <scrollpane id="c5059" binding="tableScrollPane">
+            <constraints>
+              <splitpane position="left"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="43b67" class="javax.swing.JTable" binding="summonerTable">
+                <constraints/>
+                <properties>
+                  <intercellSpacing width="2" height="1"/>
+                  <showHorizontalLines value="true"/>
+                  <showVerticalLines value="true"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <scrollpane id="3998d" binding="logScrollPane">
+            <constraints>
+              <splitpane position="right"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="240ce" class="javax.swing.JTextArea" binding="logText">
+                <constraints/>
+                <properties>
+                  <editable value="false"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+        </children>
+      </splitpane>
     </children>
   </grid>
   <inspectionSuppressions>
-    <suppress inspection="NoLabelFor" id="c5059"/>
+    <suppress inspection="NoLabelFor"/>
   </inspectionSuppressions>
 </form>

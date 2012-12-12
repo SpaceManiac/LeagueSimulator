@@ -1,5 +1,7 @@
 package com.platymuus.lolsim.gui;
 
+import com.platymuus.lolsim.Simulation;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +21,16 @@ public class DisplayChoices {
         return mainPanel;
     }
 
-    public List<String> getPieces() {
+    public List<String> getPieces(Simulation sim) {
         ArrayList<String> result = new ArrayList<String>();
-
+        piece(result, averageEloCheckBox, "Average Elo", "");
+        piece(result, mostLosesCheckBox, "Most Losses", "");
+        piece(result, mostWinsCheckBox, "Most Wins", "");
+        piece(result, lowestEloCheckBox, "Lowest Elo", "");
+        piece(result, highestEloCheckBox, "Highest Elo", "");
+        piece(result, bestWinLossRatioCheckBox, "Best W/L", "");
+        piece(result, worstWinLossRatioCheckBox, "Worst W/L", "");
+        piece(result, numberOfPlayersOnlineCheckBox, "Players Online", sim.getOnlineSummoners().size());
         return result;
     }
     

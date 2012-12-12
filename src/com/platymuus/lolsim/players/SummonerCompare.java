@@ -24,7 +24,7 @@ public final class SummonerCompare {
         }
 
         public int compare(Summoner o1, Summoner o2) {
-            return o2.getWon("normal5") - o1.getWon("normal5");
+            return o2.getWon(queue) - o1.getWon(queue);
         }
     }
 
@@ -34,7 +34,23 @@ public final class SummonerCompare {
         }
 
         public int compare(Summoner o1, Summoner o2) {
-            return o2.getElo("normal5") - o1.getElo("normal5");
+            return o2.getElo(queue) - o1.getElo(queue);
+        }
+    }
+
+    public static class MostEloHideNoobs extends PerQueue {
+        public MostEloHideNoobs(String queue) {
+            super(queue);
+        }
+
+        public int compare(Summoner o1, Summoner o2) {
+            if (noob(o2) && !noob(o1)) return -1;
+            if (noob(o1) && !noob(o2)) return 1;
+            return o2.getElo(queue) - o1.getElo(queue);
+        }
+
+        private boolean noob(Summoner o2) {
+            return o2.getWon(queue) + o2.getLost(queue) == 0;
         }
     }
 
