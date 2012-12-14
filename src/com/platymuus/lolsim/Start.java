@@ -2,6 +2,7 @@ package com.platymuus.lolsim;
 
 import com.platymuus.lolsim.gui.GuiFrontend;
 import com.platymuus.lolsim.log.PrintLogListener;
+import com.platymuus.lolsim.matchmaking.MatchQueue;
 
 import javax.swing.*;
 import java.util.regex.Matcher;
@@ -56,6 +57,16 @@ public class Start {
                 log = false;
             } else if (param.equalsIgnoreCase("debug")) {
                 logDebug = log = true;
+            } else if (param.equalsIgnoreCase("queue")) {
+                String[] bits = data.split(":");
+                sim.addQueue(new MatchQueue(sim, bits[0], Integer.parseInt(bits[1]), Integer.parseInt(bits[2])));
+            } else if (param.equalsIgnoreCase("players")) {
+                int people = 1;
+                try {
+                    people = Integer.parseInt(data);
+                }
+                catch (NumberFormatException ex) { /* do nothing */ }
+                sim.addGuys(people);
             }
         }
         

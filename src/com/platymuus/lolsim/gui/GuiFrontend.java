@@ -92,6 +92,8 @@ public class GuiFrontend implements LogListener {
         for (MatchQueue queue : sim.getQueues().values()) {
             combo.addElement(queue.getName());
         }
+        combo.setSelectedItem("normal5x5");
+
         screen.queuePicker.setModel(combo);
         screen.queuePicker.addActionListener(new ActionListener() {
             final JComboBox box = screen.queuePicker;
@@ -140,10 +142,13 @@ public class GuiFrontend implements LogListener {
         
         // Update the quick stats
         screen.optDisplayPanel.removeAll();
-        for (String s : displayChoices.getPieces(sim)) {
+        boolean first = true;
+        for (String s : displayChoices.getPieces(sim, sim.getQueues().get("" + screen.queuePicker.getSelectedItem()))) {
+            if (!first) screen.optDisplayPanel.add(new JLabel("~"));
             screen.optDisplayPanel.add(new JLabel(s));
+            first = false;
         }
-        screen.optDisplayPanel.add(new JLabel("~"));
+        if (first) screen.optDisplayPanel.add(new JLabel("Select \"Edit Quick Display\" to edit this display"));
         screen.optDisplayPanel.repaint();
     }
     
@@ -184,6 +189,8 @@ public class GuiFrontend implements LogListener {
         private String queue = "normal5x5";
         private Comparator<Summoner> compare = new SummonerCompare.MostElo("normal5x5");
         private ArrayList<Summoner> guys;
+        
+        private Summoner selected;
 
         private SummonerTableModel() {
             update();
@@ -217,19 +224,18 @@ public class GuiFrontend implements LogListener {
         }
         
         private void update() {
-            Summoner select = null;
             int sel = screen.summonerTable.getSelectedRow();
             if (sel >= 0) {
-                select = guys.get(sel);
+                selected = guys.get(sel);
             }
 
             guys = sim.getTopPlayers(100, compare);
             fireTableDataChanged();
 
-            if (select != null) {
+            if (selected != null) {
                 sel = 0;
                 for (Summoner guy : guys) {
-                    if (guy == select) {
+                    if (guy == selected) {
                         screen.summonerTable.getSelectionModel().setSelectionInterval(sel, sel);
                         break;
                     }

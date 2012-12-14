@@ -120,9 +120,12 @@ public class Simulation {
         addQueue(new MatchQueue(this, "normal3x3", 3, 10));
         addQueue(new MatchQueue(this, "ranked3x3", 3, 7));
         addQueue(new MatchQueue(this, "dominion5x5", 5, 23));
-        for (int i = 0; i < 1000; ++i) {
-            Summoner guy = new Summoner();
-            summoners.add(guy);
+        addGuys(1000);
+    }
+
+    public void addGuys(int num) {
+        for (int i = 0; i < num; ++i) {
+            summoners.add(new Summoner());
         }
     }
 
@@ -187,7 +190,7 @@ public class Simulation {
         for (Summoner guy : summoners) {
             if (onlineSummoners.contains(guy)) continue;
             if (random.nextTickChance(60 * 60 * 24 * (1 - guy.getActivity()))) {
-                //log("player online: " + guy);
+                logDebug("Player online: " + guy);
                 onlineSummoners.add(guy);
                 statsEngine.playerOnline(guy);
             }
@@ -235,7 +238,7 @@ public class Simulation {
                     busySummoners.removeAll(game.getMatch().getPlayers(team));
                 }
                 logDebug("Game ended: " + game);
-                log("Result: " + game.getId() + ": " + game.getWinner());
+                log("Result: " + game.getMatch().getQueue().getName() + "/" + game.getId() + ": " + game.getWinner());
             }
         }
     }
@@ -274,5 +277,10 @@ public class Simulation {
 
     public HashMap<String,MatchQueue> getQueues() {
         return queues;
+    }
+
+
+    public HashSet<Summoner> getSummoners() {
+        return summoners;
     }
 }

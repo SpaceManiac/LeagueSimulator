@@ -208,7 +208,7 @@ public class Summoner {
         } else if (random < .95) {
             return Math.sin(Math.sqrt(random) * Math.PI / 180);
         } else {
-            return (-(Math.pow(random - .8585779, 2) + .02));
+            return -Math.pow(random - .8585779, 2) + .02 + 2.104e-7;
         }
     }
 
