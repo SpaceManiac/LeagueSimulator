@@ -184,7 +184,7 @@ public class GuiFrontend implements LogListener {
     }
 
     private class SummonerTableModel extends AbstractTableModel {
-        private final String[] names = { "", "Username", "Elo", "Wins", "Losses", "Activity", "Online" };
+        private final String[] names = { "", "Username", "Elo", "Wins", "Losses", "Activity", "Skill", "LearnedSkill", "Online" };
 
         private String queue = "normal5x5";
         private Comparator<Summoner> compare = new SummonerCompare.MostElo("normal5x5");
@@ -217,7 +217,11 @@ public class GuiFrontend implements LogListener {
                     return guy.getLost(queue);
                 case 5: // activity
                     return guy.getActivity();
-                case 6:
+                case 6: // skill
+                    return guy.getSkill();
+                case 7: // learnedskill
+                    return guy.getLearnedSkill();
+                case 8:
                     return sim.getOnlineSummoners().contains(guy);
             }
             return "<invalid>";

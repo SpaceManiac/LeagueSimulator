@@ -84,6 +84,14 @@ public class Summoner {
         return skill + learnedSkill + (int) (Math.random() * 100);
     }
 
+    public int getSkill() {
+        return skill;
+    }
+
+    public int getLearnedSkill() {
+        return learnedSkill;
+    }
+
     /**
      * Is used whevever a player wins or loses a game to determine how much they learned from that game
      */
